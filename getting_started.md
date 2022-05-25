@@ -31,11 +31,11 @@ For detailed information about each product using WIZ5XXSR-RP-C, refer to the li
 
 - [**WIZ500SR-RP**][link-wiz500sr-rp]
 
-<p align="center"><img src="https://github.com/Wiznet/W5XXSR-RP-C/blob/main/static/images/getting_started/raspberry_pi_pico_main.png"></p>
+<p align="center"><img src="https://github.com/Wiznet/W5XXSR-RP-C/blob/main/static/images/getting_started/wiz500sr-rp_main.png"></p>
 
 - [**WIZ505SR-RP**][link-wiz505sr-rp]
 
-<p align="center"><img src="https://github.com/Wiznet/W5XXSR-RP-C/blob/main/static/images/getting_started/raspberry_pi_pico_main.png"></p>
+<p align="center"><img src="https://github.com/Wiznet/W5XXSR-RP-C/blob/main/static/images/getting_started/wiz505sr-rp_main.png"></p>
 
 - [**WIZ510SR-RP**][link-wiz510sr-rp]
 
