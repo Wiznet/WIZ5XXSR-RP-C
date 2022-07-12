@@ -1,6 +1,6 @@
 #include <string.h>
 #include "common.h"
-#include "configdata.h"
+#include "ConfigData.h"
 #include "uartHandler.h"
 #include "gpioHandler.h"
 #include "seg.h"
