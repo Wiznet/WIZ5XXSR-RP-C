@@ -176,6 +176,7 @@ typedef struct __DevConfig {
 DevConfig* get_DevConfig_pointer(void);
 void set_DevConfig_to_factory_value(void);
 void load_DevConfig_from_storage(void);
+void load_boot_DevConfig_from_storage(void);
 void save_DevConfig_to_storage(void);
 void get_DevConfig_value(void *dest, const void *src, uint16_t size);
 void set_DevConfig_value(void *dest, const void *value, const uint16_t size);

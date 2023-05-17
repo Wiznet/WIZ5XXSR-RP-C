@@ -114,10 +114,13 @@ uint8_t device_bank_update(void)
     
     // init firmware update timer
     enable_fw_update_timer = SEGCP_ENABLE;
-    erase_storage(STORAGE_BINBANK);
     
     do 
     {
+
+#ifdef __USE_WATCHDOG__
+        watchdog_update();
+#endif
         recv_len = get_firmware_from_network(SOCK_FWUPDATE, g_recv_buf);
         if(recv_len > 0)
         {
@@ -292,8 +295,6 @@ uint16_t get_firmware_from_network(uint8_t sock, uint8_t * buf)
     
     static uint32_t recv_fwsize;
 
-    PRT_INFO("getSn_SR(sock) state = 0x%x\r\n", state);
-    
     switch(state)
     {
         case SOCK_INIT:
@@ -373,7 +374,7 @@ uint16_t get_firmware_from_network(uint8_t sock, uint8_t * buf)
             break;
             
         default:
-            close(sock);
+
             break;
     }
     

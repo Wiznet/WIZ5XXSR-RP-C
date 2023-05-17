@@ -238,6 +238,42 @@ void load_DevConfig_from_storage(void)
     dev_config.device_common.fw_ver[2] = MAINTENANCE_VER;
 }
 
+void load_boot_DevConfig_from_storage(void)
+{
+    int ret = -1;
+
+    read_storage(STORAGE_CONFIG, &dev_config, sizeof(DevConfig));
+    read_storage(STORAGE_MAC, dev_config.network_common.mac, 6);
+
+    if(dev_config.serial_common.serial_debug_en)
+      stdio_init_all();
+
+    PRT_INFO("MAC = %02X%02X%02X%02X%02X%02X\r\n", dev_config.network_common.mac[0], dev_config.network_common.mac[1], dev_config.network_common.mac[2], \
+                                                   dev_config.network_common.mac[3], dev_config.network_common.mac[4], dev_config.network_common.mac[5]);
+
+    if((dev_config.config_common.packet_size == 0x0000) ||
+       (dev_config.config_common.packet_size == 0xFFFF))
+    {
+        set_DevConfig_to_factory_value();
+        //write_storage(STORAGE_CONFIG, 0, (uint8_t *)&dev_config, sizeof(DevConfig));
+        //read_storage(STORAGE_CONFIG, &dev_config, sizeof(DevConfig));
+        //device_raw_reboot();
+    }
+    
+    if((dev_config.serial_option.flow_control == flow_rtsonly) || (dev_config.serial_option.flow_control == flow_reverserts))   // Edit for supporting RTS only in 17/3/28 , recommend adapting to WIZ750SR 
+    {
+      dev_config.serial_option.uart_interface = UART_IF_RS422;    //temporarily set RS422, Actual setting is done in DATA0_UART_Configuration.
+    }
+    else
+    {
+      dev_config.serial_option.uart_interface = get_uart_if_sel_pin();
+    }
+
+    dev_config.device_common.fw_ver[0] = BOOT_MAJOR_VER;
+    dev_config.device_common.fw_ver[1] = BOOT_MINOR_VER;
+    dev_config.device_common.fw_ver[2] = BOOT_MAINTENANCE_VER;
+}
+
 
 void save_DevConfig_to_storage(void)
 {
