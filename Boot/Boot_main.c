@@ -73,7 +73,7 @@ int main(void)
     RP2040_Init();
     RP2040_Board_Init();
     load_boot_DevConfig_from_storage();
-    if ((!boot_mode_pin_get() || (device_bank_check(0) < 0)))
+    if ((!boot_mode_pin_get() || ((device_bank_check(0) < 0) && (device_bank_check(1) < 0))))
     {
         PRT_INFO("Run Bootloader Config\r\n");
         RP2040_W5X00_Init();

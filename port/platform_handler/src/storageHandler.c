@@ -105,6 +105,10 @@ void erase_storage(teDATASTORAGE stype)
 
     if((stype == STORAGE_APPBANK) || (stype == STORAGE_BINBANK))
     {
+        if (stype == STORAGE_APPBANK)
+          PRT_INFO(" > STORAGE:ERASE_START APP Bank\r\n");
+        else if (stype == STORAGE_BINBANK)
+          PRT_INFO(" > STORAGE:ERASE_START BIN Bank\r\n");
         working_address = address;
         sectors = FLASH_APP_BANK_SIZE / FLASH_SECTOR_SIZE;
 
@@ -113,7 +117,10 @@ void erase_storage(teDATASTORAGE stype)
             ret = erase_flash_sector(working_address);
             working_address += FLASH_SECTOR_SIZE;
         }
-        //working_address += (sectors * SECT_SIZE);
+        working_address += (sectors * FLASH_SECTOR_SIZE);
         PRT_INFO(" > STORAGE:ERASE_END:ADDR_RANGE - [0x%x ~ 0x%x]\r\n", address, working_address-1);
     }
+#ifdef __USE_WATCHDOG__
+    watchdog_update();
+#endif
 }

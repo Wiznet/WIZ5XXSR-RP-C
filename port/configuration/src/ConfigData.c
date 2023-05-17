@@ -269,6 +269,16 @@ void load_boot_DevConfig_from_storage(void)
       dev_config.serial_option.uart_interface = get_uart_if_sel_pin();
     }
 
+    if ((dev_config.network_common.mac[0] == 0xFF))
+    {
+      dev_config.network_common.mac[0] = 0x00;
+      dev_config.network_common.mac[1] = 0x08;
+      dev_config.network_common.mac[2] = 0xDC;
+      dev_config.network_common.mac[3] = 0x12;
+      dev_config.network_common.mac[4] = 0x34;
+      dev_config.network_common.mac[5] = 0x56;
+    }
+
     dev_config.device_common.fw_ver[0] = BOOT_MAJOR_VER;
     dev_config.device_common.fw_ver[1] = BOOT_MINOR_VER;
     dev_config.device_common.fw_ver[2] = BOOT_MAINTENANCE_VER;
@@ -469,7 +479,7 @@ void check_mac_address(void)
                                                        mac[4],
                                                        mac[5]);
         write_storage(STORAGE_CONFIG, 0, (uint8_t *)dev_config, sizeof(DevConfig));
-        device_reboot();
+        device_raw_reboot();
     }
 
 }

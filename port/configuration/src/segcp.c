@@ -256,7 +256,7 @@ uint8_t parse_SEGCP(uint8_t * pmsg, uint8_t * param)
         strcpy(param, (uint8_t*)&pmsg[2]);
     }
 
-#if DBG_LEVEL_SEGCP
+#if 0
     PRT_SEGCP("[%d:%s:", cmdnum, *pcmd);
 
     if(cmdnum == SEGCP_MA)
@@ -310,7 +310,7 @@ uint16_t proc_SEGCP(uint8_t* segcp_req, uint8_t* segcp_rep)
     
     while(treq)
     {
-        PRT_SEGCP("SEGCP_REQ_TOK : %s\r\n",treq);
+        //PRT_SEGCP("SEGCP_REQ_TOK : %s\r\n",treq);
         if((cmdnum = parse_SEGCP(treq, param)) != SEGCP_UNKNOWN)
         {
             param_len = strlen((const char *)param);
