@@ -827,48 +827,48 @@ void proc_SEG_mqtt_client(uint8_t sock)
                     process_socket_termination(sock, 100);
                     break;
                 }
-            }
                 
-            ret = MQTTConnect(&mqtt_c, &mqtt_data); 
-            if (ret < 0)
-            {
-                PRT_SEG(" > SEG:MQTT_CLIENT_MODE:MQTTConnect Err %d\r\n", ret);
-                process_socket_termination(sock, 100);
-                break;
-            }
-            PRT_SEG(" > SEG:MQTT_CLIENT_MODE:MQTT_CONNECTION\r\n");
+                ret = MQTTConnect(&mqtt_c, &mqtt_data); 
+                if (ret < 0)
+                {
+                    PRT_SEG(" > SEG:MQTT_CLIENT_MODE:MQTTConnect Err %d\r\n", ret);
+                    process_socket_termination(sock, 100);
+                    break;
+                }
+                PRT_SEG(" > SEG:MQTT_CLIENT_MODE:MQTT_CONNECTION\r\n");
 
-            if (mqtt_option->sub_topic_0[0] != 0 && mqtt_option->sub_topic_0[0] != 0xFF)
-            {
-                ret = MQTTSubscribe(&mqtt_c, (char *)mqtt_option->sub_topic_0, mqtt_option->qos, mqtt_subscribeMessageHandler);
-                if (ret < 0)
+                if (mqtt_option->sub_topic_0[0] != 0 && mqtt_option->sub_topic_0[0] != 0xFF)
                 {
-                  PRT_SEG(" > SEG:MQTT_CLIENT_MODE:MQTTSubscribe Err %d\r\n", ret);
-                  process_socket_termination(sock, 100);
-                  break;
+                    ret = MQTTSubscribe(&mqtt_c, (char *)mqtt_option->sub_topic_0, mqtt_option->qos, mqtt_subscribeMessageHandler);
+                    if (ret < 0)
+                    {
+                      PRT_SEG(" > SEG:MQTT_CLIENT_MODE:MQTTSubscribe Err %d\r\n", ret);
+                      process_socket_termination(sock, 100);
+                      break;
+                    }
                 }
-            }
-            if (mqtt_option->sub_topic_1[0] != 0 && mqtt_option->sub_topic_1[0] != 0xFF)
-            {
-                ret = MQTTSubscribe(&mqtt_c, (char *)mqtt_option->sub_topic_1, mqtt_option->qos, mqtt_subscribeMessageHandler);
-                if (ret < 0)
+                if (mqtt_option->sub_topic_1[0] != 0 && mqtt_option->sub_topic_1[0] != 0xFF)
                 {
-                  PRT_SEG(" > SEG:MQTT_CLIENT_MODE:MQTTSubscribe Err %d\r\n", ret);
-                  process_socket_termination(sock, 100);
-                  break;
+                    ret = MQTTSubscribe(&mqtt_c, (char *)mqtt_option->sub_topic_1, mqtt_option->qos, mqtt_subscribeMessageHandler);
+                    if (ret < 0)
+                    {
+                      PRT_SEG(" > SEG:MQTT_CLIENT_MODE:MQTTSubscribe Err %d\r\n", ret);
+                      process_socket_termination(sock, 100);
+                      break;
+                    }
                 }
-            }
-            if (mqtt_option->sub_topic_2[0] != 0 && mqtt_option->sub_topic_2[0] != 0xFF)
-            {
-                ret = MQTTSubscribe(&mqtt_c, (char *)mqtt_option->sub_topic_2, mqtt_option->qos, mqtt_subscribeMessageHandler);
-                if (ret < 0)
+                if (mqtt_option->sub_topic_2[0] != 0 && mqtt_option->sub_topic_2[0] != 0xFF)
                 {
-                  PRT_SEG(" > SEG:MQTT_CLIENT_MODE:MQTTSubscribe Err %d\r\n", ret);
-                  process_socket_termination(sock, 100);
-                  break;
+                    ret = MQTTSubscribe(&mqtt_c, (char *)mqtt_option->sub_topic_2, mqtt_option->qos, mqtt_subscribeMessageHandler);
+                    if (ret < 0)
+                    {
+                      PRT_SEG(" > SEG:MQTT_CLIENT_MODE:MQTTSubscribe Err %d\r\n", ret);
+                      process_socket_termination(sock, 100);
+                      break;
+                    }
                 }
-            }
-            PRT_SEG(" > SEG:MQTT_CLIENT_MODE:MQTTSubscribed\r\n");
+            	PRT_SEG(" > SEG:MQTT_CLIENT_MODE:MQTTSubscribed\r\n");
+			}
             break;
         
         case SOCK_ESTABLISHED:
