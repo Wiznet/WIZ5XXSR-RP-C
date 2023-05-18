@@ -207,19 +207,17 @@ void load_DevConfig_from_storage(void)
     PRT_INFO("MAC = %02X%02X%02X%02X%02X%02X\r\n", dev_config.network_common.mac[0], dev_config.network_common.mac[1], dev_config.network_common.mac[2], \
                                                    dev_config.network_common.mac[3], dev_config.network_common.mac[4], dev_config.network_common.mac[5]);
 
-    PRT_INFO("dev_config.devConfigVer = %d, DEV_CONFIG_VER = %d\r\n", dev_config.devConfigVer, DEV_CONFIG_VER);
     if((dev_config.config_common.packet_size == 0x0000) ||
        (dev_config.config_common.packet_size == 0xFFFF) ||
        (dev_config.config_common.packet_size != sizeof(DevConfig)) ||
         dev_config.devConfigVer != DEV_CONFIG_VER)
     { 
-        PRT_INFO(" Config Data size: %d / %d\r\n", dev_config.config_common.packet_size, sizeof(DevConfig));        
+        PRT_INFO("dev_config.devConfigVer = %d, DEV_CONFIG_VER = %d\r\n", dev_config.devConfigVer, DEV_CONFIG_VER);
+        PRT_INFO("Config Data size: %d / %d\r\n", dev_config.config_common.packet_size, sizeof(DevConfig));
+        PRT_INFO("Start Factory Reset\r\n");
         set_DevConfig_to_factory_value();
-
-        //erase_storage(STORAGE_CONFIG);
-        write_storage(STORAGE_CONFIG, 0, (uint8_t *)&dev_config, sizeof(DevConfig));
-        read_storage(STORAGE_CONFIG, &dev_config, sizeof(DevConfig));
-
+        save_DevConfig_to_storage();
+        
         PRT_INFO("After Config Data size: %d / %d\r\n", dev_config.config_common.packet_size, sizeof(DevConfig));
         device_raw_reboot();
     }
@@ -478,7 +476,8 @@ void check_mac_address(void)
                                                        mac[3],
                                                        mac[4],
                                                        mac[5]);
-        write_storage(STORAGE_CONFIG, 0, (uint8_t *)dev_config, sizeof(DevConfig));
+        //write_storage(STORAGE_CONFIG, 0, (uint8_t *)dev_config, sizeof(DevConfig));
+        save_DevConfig_to_storage();
         device_raw_reboot();
     }
 

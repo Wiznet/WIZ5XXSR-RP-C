@@ -610,7 +610,6 @@ uint16_t proc_SEGCP(uint8_t* segcp_req, uint8_t* segcp_rep)
             }
             else if(gSEGCPPRIVILEGE & (SEGCP_PRIVILEGE_SET|SEGCP_PRIVILEGE_WRITE))
             {
-                PRT_SEGCP("gSEGCPPRIVILEGE & (SEGCP_PRIVILEGE_SET|SEGCP_PRIVILEGE_WRITE)\r\n");
                 switch((teSEGCPCMDNUM)cmdnum)
                 {
                     case SEGCP_MC:
@@ -1035,8 +1034,7 @@ uint16_t proc_SEGCP(uint8_t* segcp_req, uint8_t* segcp_rep)
                                     ret |= SEGCP_RET_ERR_INVALIDPARAM;
                                 else
                                 {
-                                    erase_storage(STORAGE_CONFIG);
-                                    write_storage(STORAGE_CONFIG, 0, (uint8_t *)dev_config, sizeof(DevConfig));
+                                    save_DevConfig_to_storage();
                                     erase_storage(STORAGE_ROOTCA);
                                     write_storage(STORAGE_ROOTCA, 0, (uint8_t *)g_temp_buf, dev_config->ssl_option.rootca_len + 1);
                                     
@@ -1095,9 +1093,7 @@ uint16_t proc_SEGCP(uint8_t* segcp_req, uint8_t* segcp_rep)
                                     ret |= SEGCP_RET_ERR_INVALIDPARAM;
                                 else
                                 {
-
-                                    erase_storage(STORAGE_CONFIG);
-                                    write_storage(STORAGE_CONFIG, 0, (uint8_t *)dev_config, sizeof(DevConfig));
+                                    save_DevConfig_to_storage();
                                     erase_storage(STORAGE_CLICA);
                                     write_storage(STORAGE_CLICA, 0, (uint8_t *)g_temp_buf, dev_config->ssl_option.clica_len + 1);
 
@@ -1157,8 +1153,10 @@ uint16_t proc_SEGCP(uint8_t* segcp_req, uint8_t* segcp_rep)
                                     ret |= SEGCP_RET_ERR_INVALIDPARAM;
                                 else
                                 {
-                                    write_storage(STORAGE_CONFIG, 0, (uint8_t *)dev_config, sizeof(DevConfig));
+                                    save_DevConfig_to_storage();
+                                    erase_storage(STORAGE_PKEY);
                                     write_storage(STORAGE_PKEY, 0, (uint8_t *)g_temp_buf, dev_config->ssl_option.pkey_len + 1);
+                                    
                                     memcpy(trep, tbSEGCPCMD[cmdnum], SEGCP_CMD_MAX);
                                     trep+=SEGCP_CMD_MAX;
                                     strcat(trep, SEGCP_DELIMETER);

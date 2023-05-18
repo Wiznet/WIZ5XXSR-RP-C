@@ -114,8 +114,9 @@ uint8_t device_bank_update(void)
     
     // init firmware update timer
     enable_fw_update_timer = SEGCP_ENABLE;
+    close(SOCK_FWUPDATE);
     
-    do 
+    do
     {
 
 #ifdef __USE_WATCHDOG__
@@ -373,8 +374,7 @@ uint16_t get_firmware_from_network(uint8_t sock, uint8_t * buf)
             }
             break;
             
-        default:
-
+        default:     
             break;
     }
     
