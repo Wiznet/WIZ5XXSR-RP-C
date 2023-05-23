@@ -185,7 +185,7 @@ static void RP2040_Init(void)
 
 static void RP2040_W5X00_Init(void)
 {
-    wizchip_spi_initialize();
+    wizchip_spi_initialize((PLL_SYS_KHZ * 1000 / 4)); //33.25Mhz
     wizchip_cris_initialize();
 
     wizchip_reset();

@@ -24,7 +24,7 @@
 #define PIN_RST 20
 
 /* Use SPI DMA */
-//#define USE_SPI_DMA // if you want to use SPI DMA, uncomment.
+#define USE_SPI_DMA // if you want to use SPI DMA, uncomment.
 
 /**
  * ----------------------------------------------------------------------------------------------------
@@ -122,9 +122,10 @@ static void wizchip_critical_section_unlock(void);
  *  Puts the SPI into a known state, and enable it.
  *  Set DMA channel completion channel.
  *
- *  \param none
+ *  \param spi_clock spi speed
  */
-void wizchip_spi_initialize(void);
+void wizchip_spi_initialize(uint32_t spi_clock);
+
 
 /*! \brief Initialize a critical section structure
  *  \ingroup w5x00_spi
