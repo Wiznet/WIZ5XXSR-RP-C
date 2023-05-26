@@ -42,6 +42,7 @@ static uint16_t any_port = 0;
 
 uint8_t g_send_buf[DATA_BUF_SIZE];
 uint8_t g_send_mqtt_buf[DATA_BUF_SIZE];
+uint8_t g_recv_mqtt_buf[DATA_BUF_SIZE];
 uint8_t g_recv_buf[DATA_BUF_SIZE];
 
 uint8_t *g_rootca_buf;

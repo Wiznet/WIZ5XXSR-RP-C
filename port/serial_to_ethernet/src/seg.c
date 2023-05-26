@@ -70,6 +70,8 @@ uint8_t flag_sent_first_keepalive = SEG_DISABLE;
 extern uint8_t g_send_buf[DATA_BUF_SIZE];
 extern uint8_t g_recv_buf[DATA_BUF_SIZE];
 extern uint8_t g_send_mqtt_buf[DATA_BUF_SIZE];
+extern uint8_t g_recv_mqtt_buf[DATA_BUF_SIZE];
+
 
 uint16_t u2e_size = 0;
 uint16_t e2u_size = 0;
@@ -813,7 +815,7 @@ void proc_SEG_mqtt_client(uint8_t sock)
                 // MQTT connect exception checker; e.g., dns failed / zero srcip ... and etc.
                 if(check_tcp_connect_exception() == ON) return;
                 NewNetwork(&mqtt_n, sock);
-                MQTTClientInit(&mqtt_c, &mqtt_n, MQTT_TIMEOUT_MS, g_send_mqtt_buf, DATA_BUF_SIZE, g_recv_buf, DATA_BUF_SIZE);
+                MQTTClientInit(&mqtt_c, &mqtt_n, MQTT_TIMEOUT_MS, g_send_mqtt_buf, DATA_BUF_SIZE, g_recv_mqtt_buf, DATA_BUF_SIZE);
 
                 mqtt_data.username.cstring = mqtt_option->user_name;
                 mqtt_data.clientID.cstring = mqtt_option->client_id;
@@ -1032,7 +1034,7 @@ void proc_SEG_mqtts_client(uint8_t sock)
                         
                 }
 
-                MQTTClientInit(&mqtt_c, &mqtt_n, MQTT_TIMEOUT_MS, g_send_mqtt_buf, DATA_BUF_SIZE, g_recv_buf, DATA_BUF_SIZE);
+                MQTTClientInit(&mqtt_c, &mqtt_n, MQTT_TIMEOUT_MS, g_send_mqtt_buf, DATA_BUF_SIZE, g_recv_mqtt_buf, DATA_BUF_SIZE);
                 mqtt_data.username.cstring = mqtt_option->user_name;
                 mqtt_data.clientID.cstring = mqtt_option->client_id;
                 mqtt_data.password.cstring = mqtt_option->password;
