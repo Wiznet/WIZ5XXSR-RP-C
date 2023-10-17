@@ -36,7 +36,8 @@ typedef enum {RESET = 0, SET = !RESET} FlagStatus, ITStatus;
     #define __USE_S2E_OVER_TLS__                // Use S2E TCP client over SSL/TLS mode
     #define __USE_UART_485_422__
     //#define __USE_USERS_GPIO__
-    #define DEVICE_ID_DEFAULT                   "WIZ5XXSR-RP"//"S2E_SSL-MB" // Device name
+    //#define DEVICE_ID_DEFAULT                   "WIZ5XXSR-RP"//"S2E_SSL-MB" // Device name
+    #define DEVICE_ID_DEFAULT                   "WIZ5XXSR-RP_E-SAVE"//"S2E_SSL-MB" // Device name
     #define DEVICE_CLOCK_SELECT                 CLOCK_SOURCE_EXTERNAL // or CLOCK_SOURCE_INTERNAL
     #define DEVICE_UART_CNT                     (1)
     #define DEVICE_SETTING_PASSWORD_DEFAULT     "00000000"

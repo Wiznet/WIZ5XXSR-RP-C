@@ -63,7 +63,7 @@ uint8_t * tbSEGCPCMD[] = {"MC", "VR", "MN", "IM", "OP", "CP", "DG", "KA", "KI", 
                           "EC", "GA", "GB", "GC", "GD", "CA", "CB", "CC", "CD", "SC", 
                           "S0", "S1", "RX", "UI", "TR", "QU", "QP", "QC", "QK", "PU", 
                           "U0", "U1", "U2", "QO", "RC", "CE", "OC", "LC", "PK", "UF",
-                          "FW", "SO", 0};
+                          "FW", "SO", "U3", "U4", "U5", "U6", "U7", "U8", "U9", 0};
  
 #endif
 uint8_t * tbSEGCPERR[] = {"ERNULL", "ERNOTAVAIL", "ERNOPARAM", "ERIGNORED", "ERNOCOMMAND", "ERINVALIDPARAM", "ERNOPRIVILEGE"};
@@ -580,7 +580,51 @@ uint16_t proc_SEGCP(uint8_t* segcp_req, uint8_t* segcp_rep)
                         else sprintf(trep, "%s", dev_config->mqtt_option.sub_topic_2);
                         //sprintf(trep, "%s", dev_config->mqtt_option.sub_topic);
                         break;
+                        
+#if (MAX_MESSAGE_HANDLERS==10)
+                    case SEGCP_U3: // mqtt subscribe topic
+                        if(dev_config->mqtt_option.sub_topic_3[0] == 0) sprintf(trep,"%c",SEGCP_NULL);
+                        else sprintf(trep, "%s", dev_config->mqtt_option.sub_topic_3);
+                        //sprintf(trep, "%s", dev_config->mqtt_option.sub_topic);
+                    break;
                     
+                    case SEGCP_U4: // mqtt subscribe topic
+                        if(dev_config->mqtt_option.sub_topic_4[0] == 0) sprintf(trep,"%c",SEGCP_NULL);
+                        else sprintf(trep, "%s", dev_config->mqtt_option.sub_topic_4);
+                        //sprintf(trep, "%s", dev_config->mqtt_option.sub_topic);
+                    break;
+
+                    case SEGCP_U5: // mqtt subscribe topic
+                        if(dev_config->mqtt_option.sub_topic_5[0] == 0) sprintf(trep,"%c",SEGCP_NULL);
+                        else sprintf(trep, "%s", dev_config->mqtt_option.sub_topic_5);
+                        //sprintf(trep, "%s", dev_config->mqtt_option.sub_topic);
+                    break;
+                    
+                    case SEGCP_U6: // mqtt subscribe topic
+                        if(dev_config->mqtt_option.sub_topic_6[0] == 0) sprintf(trep,"%c",SEGCP_NULL);
+                        else sprintf(trep, "%s", dev_config->mqtt_option.sub_topic_6);
+                        //sprintf(trep, "%s", dev_config->mqtt_option.sub_topic);
+                    break;
+
+                    case SEGCP_U7: // mqtt subscribe topic
+                        if(dev_config->mqtt_option.sub_topic_7[0] == 0) sprintf(trep,"%c",SEGCP_NULL);
+                        else sprintf(trep, "%s", dev_config->mqtt_option.sub_topic_7);
+                        //sprintf(trep, "%s", dev_config->mqtt_option.sub_topic);
+                    break;
+
+                    case SEGCP_U8: // mqtt subscribe topic
+                        if(dev_config->mqtt_option.sub_topic_8[0] == 0) sprintf(trep,"%c",SEGCP_NULL);
+                        else sprintf(trep, "%s", dev_config->mqtt_option.sub_topic_8);
+                        //sprintf(trep, "%s", dev_config->mqtt_option.sub_topic);
+                    break;
+
+                    case SEGCP_U9: // mqtt subscribe topic
+                        if(dev_config->mqtt_option.sub_topic_9[0] == 0) sprintf(trep,"%c",SEGCP_NULL);
+                        else sprintf(trep, "%s", dev_config->mqtt_option.sub_topic_9);
+                        //sprintf(trep, "%s", dev_config->mqtt_option.sub_topic);
+                    break;
+#endif
+
                     case SEGCP_QO: // mqtt qos level
                         sprintf(trep, "%d", dev_config->mqtt_option.qos);
                         break;
@@ -965,6 +1009,56 @@ uint16_t proc_SEGCP(uint8_t* segcp_req, uint8_t* segcp_rep)
                         else
                             sprintf(dev_config->mqtt_option.sub_topic_2, "%s", param);
                         break;
+
+#if (MAX_MESSAGE_HANDLERS==10)
+                    case SEGCP_U3: // mqtt subscribe topic
+                        if(param[0] == SEGCP_NULL)
+                            dev_config->mqtt_option.sub_topic_3[0] = 0;
+                        else
+                            sprintf(dev_config->mqtt_option.sub_topic_3, "%s", param);
+                        break;
+
+                    case SEGCP_U4: // mqtt subscribe topic
+                        if(param[0] == SEGCP_NULL)
+                            dev_config->mqtt_option.sub_topic_4[0] = 0;
+                        else
+                            sprintf(dev_config->mqtt_option.sub_topic_4, "%s", param);
+                        break;
+                    case SEGCP_U5: // mqtt subscribe topic
+                        if(param[0] == SEGCP_NULL)
+                            dev_config->mqtt_option.sub_topic_5[0] = 0;
+                        else
+                            sprintf(dev_config->mqtt_option.sub_topic_5, "%s", param);
+                        break;
+
+                    case SEGCP_U6: // mqtt subscribe topic
+                        if(param[0] == SEGCP_NULL)
+                            dev_config->mqtt_option.sub_topic_6[0] = 0;
+                        else
+                            sprintf(dev_config->mqtt_option.sub_topic_6, "%s", param);
+                        break;
+
+                    case SEGCP_U7: // mqtt subscribe topic
+                        if(param[0] == SEGCP_NULL)
+                            dev_config->mqtt_option.sub_topic_7[0] = 0;
+                        else
+                            sprintf(dev_config->mqtt_option.sub_topic_7, "%s", param);
+                        break;
+
+                    case SEGCP_U8: // mqtt subscribe topic
+                        if(param[0] == SEGCP_NULL)
+                            dev_config->mqtt_option.sub_topic_8[0] = 0;
+                        else
+                            sprintf(dev_config->mqtt_option.sub_topic_8, "%s", param);
+                        break;                                                
+
+                    case SEGCP_U9: // mqtt subscribe topic
+                        if(param[0] == SEGCP_NULL)
+                            dev_config->mqtt_option.sub_topic_9[0] = 0;
+                        else
+                            sprintf(dev_config->mqtt_option.sub_topic_9, "%s", param);
+                        break;
+#endif
 
                     case SEGCP_QO: // mqtt qos level
                         tmp_byte = atoi(param);

@@ -151,6 +151,15 @@ struct __mqtt_option {
     uint8_t password[MQTT_PASSWORD_SIZE];
     uint32_t keepalive;
     uint8_t qos;
+#if (MAX_MESSAGE_HANDLERS==10)
+    uint8_t sub_topic_3[MQTT_TOPIC_SIZE];
+    uint8_t sub_topic_4[MQTT_TOPIC_SIZE];
+    uint8_t sub_topic_5[MQTT_TOPIC_SIZE];
+    uint8_t sub_topic_6[MQTT_TOPIC_SIZE];
+    uint8_t sub_topic_7[MQTT_TOPIC_SIZE];
+    uint8_t sub_topic_8[MQTT_TOPIC_SIZE];
+    uint8_t sub_topic_9[MQTT_TOPIC_SIZE];
+#endif
 } __attribute__((packed));
 
 

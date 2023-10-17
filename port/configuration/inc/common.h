@@ -8,14 +8,14 @@
 //////////////////////////////////
 /* Application Firmware Version */
 #define MAJOR_VER               1
-#define MINOR_VER               0
+#define MINOR_VER               1
 #define MAINTENANCE_VER         6
 
 #define BOOT_MAJOR_VER               1
-#define BOOT_MINOR_VER               0
+#define BOOT_MINOR_VER               1
 #define BOOT_MAINTENANCE_VER         6
 
-#define DEV_CONFIG_VER          103
+#define DEV_CONFIG_VER          104
 
 //#define STR_VERSION_STATUS      "Develop" // or "Stable"
 #define STR_VERSION_STATUS      "Stable"
@@ -45,9 +45,16 @@
 // Ethernet                     //
 //////////////////////////////////
 /* Buffer size */
-#define DATA_BUF_SIZE           2048
-#define CONFIG_BUF_SIZE         2048 //512
-#define MQTT_BUF_SIZE                   2048
+#define DATA_BUF_SIZE           3072
+//#define DATA_BUF_SIZE           2048
+
+#if (MAX_MESSAGE_HANDLERS==10)
+#define CONFIG_BUF_SIZE         4096
+#else
+#define CONFIG_BUF_SIZE         
+#endif
+
+#define MQTT_BUF_SIZE           2048
 
 #define ROOTCA_BUF_SIZE         2048
 #define CLICA_BUF_SIZE          2048

@@ -161,7 +161,7 @@ void set_DevConfig_to_factory_value(void)
     dev_config.ssl_option.recv_timeout = 2000;
     
     // MQTT Option
-
+#if 0
     memset(dev_config.mqtt_option.user_name, 0x00, sizeof(dev_config.mqtt_option.user_name));
     memset(dev_config.mqtt_option.password, 0x00, sizeof(dev_config.mqtt_option.password));
     memset(dev_config.mqtt_option.client_id, 0x00, sizeof(dev_config.mqtt_option.client_id));
@@ -171,7 +171,9 @@ void set_DevConfig_to_factory_value(void)
     memset(dev_config.mqtt_option.sub_topic_2, 0x00, sizeof(dev_config.mqtt_option.sub_topic_2));
     dev_config.mqtt_option.qos = QOS0;
     dev_config.mqtt_option.keepalive = 0;
-
+#else
+    memset(&dev_config.mqtt_option, 0x00, sizeof(struct __mqtt_option));
+#endif
     // fixed local port enable / disable
 
     dev_config.device_option.pw_setting_en = ENABLE;
