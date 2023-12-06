@@ -23,6 +23,7 @@
 #define SEGCP_CMD_MAX				2
 #define SEGCP_PARAM_MAX				256
 #define SEGCP_DELIMETER				"\r\n"
+#define SEGCP_DELIMETER_CR          '\r'
 
 // Command [K1] : Hidden command, This command erase the configuration data in flash / or EEPROM
 #if (DEVICE_UART_CNT > 1)
@@ -43,7 +44,7 @@ typedef enum {SEGCP_MC, SEGCP_VR, SEGCP_MN, SEGCP_IM, SEGCP_OP, SEGCP_DD, SEGCP_
 #else
 // Command [K1] : Hidden command, This command erase the configutation data in flash / or EEPROM
 // S2E SSL from SEGCP_RC
-typedef enum {SEGCP_MC, SEGCP_VR, SEGCP_MN, SEGCP_IM, SEGCP_OP, SEGCP_CP, SEGCP_DG, SEGCP_KA, SEGCP_KI, SEGCP_KE,
+typedef enum {SEGCP_SZ, SEGCP_MC, SEGCP_VR, SEGCP_MN, SEGCP_IM, SEGCP_OP, SEGCP_CP, SEGCP_DG, SEGCP_KA, SEGCP_KI, SEGCP_KE,
               SEGCP_RI, SEGCP_LI, SEGCP_SM, SEGCP_GW, SEGCP_DS, SEGCP_DH, SEGCP_LP, SEGCP_RP, SEGCP_RH, SEGCP_BR, 
               SEGCP_DB, SEGCP_PR, SEGCP_SB, SEGCP_FL, SEGCP_IT, SEGCP_PT, SEGCP_PS, SEGCP_PD, SEGCP_TE, SEGCP_SS, 
               SEGCP_NP, SEGCP_SP, SEGCP_MA, SEGCP_PW, SEGCP_SV, SEGCP_EX, SEGCP_RT, SEGCP_UN, SEGCP_ST, SEGCP_FR,

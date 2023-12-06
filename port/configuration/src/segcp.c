@@ -24,6 +24,7 @@
 
 #define END_CERT "-----END CERTIFICATE-----"
 #define END_PKEY "-----END RSA PRIVATE KEY-----"
+#define MAX_MTU_SIZE 1460
 
 // Ring Buffer declaration
 BUFFER_DECLARATION(data0_rx);
@@ -34,6 +35,8 @@ uint16_t uart_get_commandline(uint8_t* buf, uint16_t maxSize);
 /* Private variables ---------------------------------------------------------*/
 static uint8_t gSEGCPREQ[CONFIG_BUF_SIZE];
 static uint8_t gSEGCPREP[CONFIG_BUF_SIZE];
+
+static uint8_t * sz_ptr;
 
 static uint8_t SEGCP_UART = SEG_DATA0_UART; // default: SEG_DATA0_UART
 
@@ -56,7 +59,7 @@ uint8_t * tbSEGCPCMD[] = {"MC", "VR", "MN", "IM", "OP", "DD", "CP", "PO", "DG", 
                           0};
 #else
 
-uint8_t * tbSEGCPCMD[] = {"MC", "VR", "MN", "IM", "OP", "CP", "DG", "KA", "KI", "KE",
+uint8_t * tbSEGCPCMD[] = {"SZ", "MC", "VR", "MN", "IM", "OP", "CP", "DG", "KA", "KI", "KE",
                           "RI", "LI", "SM", "GW", "DS", "DH", "LP", "RP", "RH", "BR", 
                           "DB", "PR", "SB", "FL", "IT", "PT", "PS", "PD", "TE", "SS", 
                           "NP", "SP", "MA", "PW", "SV", "EX", "RT", "UN", "ST", "FR", 
@@ -219,7 +222,7 @@ uint8_t parse_SEGCP(uint8_t * pmsg, uint8_t * param)
         else
             return SEGCP_UNKNOWN;
     }
-    else if(cmdnum == (uint8_t)SEGCP_PW)
+    else if((cmdnum == (uint8_t)SEGCP_PW) || (cmdnum == (uint8_t)SEGCP_SZ))
     {
         for(i = 0; pmsg[2+i] != '\r'; i++)
             param[i] = pmsg[2+i];
@@ -322,6 +325,10 @@ uint16_t proc_SEGCP(uint8_t* segcp_req, uint8_t* segcp_rep)
                 
                 switch((teSEGCPCMDNUM)cmdnum)
                 {
+                    case SEGCP_SZ:
+                        sz_ptr = trep;
+                        sprintf(trep, "%06d", 000000);
+                        break;
                     case SEGCP_MC: sprintf(trep,"%02X:%02X:%02X:%02X:%02X:%02X", 
                                             dev_config->network_common.mac[0], dev_config->network_common.mac[1], dev_config->network_common.mac[2],
                                             dev_config->network_common.mac[3], dev_config->network_common.mac[4], dev_config->network_common.mac[5]);
@@ -1379,6 +1386,8 @@ uint16_t proc_SEGCP_udp(uint8_t* segcp_req, uint8_t* segcp_rep)
     
     uint16_t ret = 0;
     uint16_t len = 0;
+    uint16_t total_len = 0;
+    uint16_t sz_len = 0;
     
     uint8_t destip[4];
     uint16_t destport;
@@ -1386,6 +1395,8 @@ uint16_t proc_SEGCP_udp(uint8_t* segcp_req, uint8_t* segcp_rep)
     uint8_t tpar[SEGCP_PARAM_MAX*2];
     uint8_t* treq;
     uint8_t* trep;
+    uint16_t* sz_int;
+    uint8_t i = 0;
     
     gSEGCPPRIVILEGE = SEGCP_PRIVILEGE_CLR;
     switch(getSn_SR(SEGCP_UDP_SOCK))
@@ -1396,11 +1407,11 @@ uint16_t proc_SEGCP_udp(uint8_t* segcp_req, uint8_t* segcp_rep)
                 PRT_SEGCP("len = getSn_RX_RSR = %d\r\n", len);
                 treq = segcp_req;
                 trep = segcp_rep;
-                len = recvfrom(SEGCP_UDP_SOCK, treq, len, destip, &destport);
-                PRT_SEGCP("len = recvfrom = %d\r\n", len);
+                total_len = recvfrom(SEGCP_UDP_SOCK, treq, len, destip, &destport);
+                PRT_SEGCP("total_len = recvfrom = %d\r\n", total_len);
                 
                 //treq[len-1] = 0;
-                treq[len] = 0;
+                treq[total_len] = 0;
                 
                 if(SEGCP_MA == parse_SEGCP(treq, tpar))
                 {
@@ -1430,18 +1441,35 @@ uint16_t proc_SEGCP_udp(uint8_t* segcp_req, uint8_t* segcp_rep)
                                 memcpy(trep,treq, strlen(tpar)+4);  // "PWxxxx\r\n"
                                 treq += (strlen(tpar) + 4);
                                 trep += (strlen(tpar) + 4);
-                                ret = proc_SEGCP(treq,trep);
-                                
-                                sendto(SEGCP_UDP_SOCK, segcp_rep, 14+strlen(tpar)+strlen(trep), "\xFF\xFF\xFF\xFF", destport);
+
+                                if(SEGCP_SZ == parse_SEGCP(treq, tpar))
+                                {
+                                    sz_int = tpar;
+                                    memcpy(trep,treq, strlen(tpar) + 4);
+                                    treq += (strlen(tpar) + 4);
+
+                                    for(i = 0; i < atoi(sz_int) / MAX_MTU_SIZE; i++)
+                                    {
+                                        len = recvfrom(SEGCP_UDP_SOCK, segcp_req + total_len, len, destip, &destport);
+                                        total_len += len;
+                                        segcp_req[total_len] = 0;
+                                    }
+                                }
+                                ret = proc_SEGCP(treq, trep);
+                                sz_len = 9 + strlen(tpar) + strlen(trep);
+                                sprintf(sz_ptr, "%06d", sz_len);
+                                *(sz_ptr + 6) = SEGCP_DELIMETER_CR;
+
+                                sendto(SEGCP_UDP_SOCK, segcp_rep, sz_len, "\xFF\xFF\xFF\xFF", destport);
 
                                 PRT_SEGCP("tpar_len = %d, trep_len = %d\r\n", strlen(tpar), strlen(trep));
 
                                 PRT_SEGCP("tpar = %s, trep = %s\r\n", tpar, trep);
-                                PRT_SEGCP("send to len = %d\r\n", 14+strlen(tpar)+strlen(trep));
+                                PRT_SEGCP("send to len = %d\r\n", sz_len);
                                 PRT_SEGCP(">> strtok: %s\r\n", segcp_rep);
+                                }
                             }
                         }
-                    }
                     else
                         return 0;
                 }
