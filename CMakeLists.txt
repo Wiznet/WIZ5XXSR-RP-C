@@ -64,6 +64,7 @@ set(ENABLE_PROGRAMS OFF CACHE BOOL "Build mbedtls programs")
 set(ENABLE_TESTING OFF CACHE BOOL "Build mbedtls testing")
 add_definitions(-DMBEDTLS_CONFIG_FILE="${APP_PORT_DIR}/mbedtls/inc/SSLConfig.h")
 add_definitions(-DSET_TRUSTED_CERT_IN_SAMPLES)
+add_definitions(-DPICO_FLASH_SPI_CLKDIV=4)
 
 # Add libraries in subdirectories
 add_subdirectory(App)
