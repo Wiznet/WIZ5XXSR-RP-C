@@ -67,7 +67,7 @@ void on_uart_rx(void)
         ch = uart_getc(UART_ID);
 
 //#ifdef _UART_DEBUG_
-#if 1
+#if 0
     printf("%c", ch);// ## UART echo; for debugging
 #endif
 

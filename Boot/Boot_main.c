@@ -29,7 +29,6 @@
 
 #include "dhcp.h"
 #include "dhcp_cb.h"
-#include "dns.h"
 
 #include "segcp.h"
 #include "ConfigData.h"
@@ -37,7 +36,6 @@
 #include "timerHandler.h"
 #include "uartHandler.h"
 #include "deviceHandler.h"
-#include "dnsHandler.h"
 #include "ConfigData.h"
 #include "flashHandler.h"
 #include "gpioHandler.h"
