@@ -60,6 +60,9 @@ bool repeating_timer_callback(struct repeating_timer *t)
         devtime_sec++;              // device time counter,
         currenttime_sec++;          // Can be updated this counter value by time protocol like NTP.
         LED_Toggle(LED3);
+#ifdef __USE_WATCHDOG__
+        watchdog_update();
+#endif
     }
 
     /* Minute Process */
