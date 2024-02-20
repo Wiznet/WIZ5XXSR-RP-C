@@ -49,23 +49,30 @@ if(NOT DEFINED MBEDTLS_DIR)
     message(STATUS "MBEDTLS_DIR = ${MBEDTLS_DIR}")
 endif()
 
-if(NOT DEFINED PORT_DIR)
-    set(PORT_DIR ${CMAKE_SOURCE_DIR}/port)
-    message(STATUS "PORT_DIR = ${PORT_DIR}")
+if(NOT DEFINED BOOT_PORT_DIR)
+    set(BOOT_PORT_DIR ${CMAKE_SOURCE_DIR}/port/boot)
+    message(STATUS "BOOT_PORT_DIR = ${BOOT_PORT_DIR}")
+endif()
+
+if(NOT DEFINED APP_PORT_DIR)
+    set(APP_PORT_DIR ${CMAKE_SOURCE_DIR}/port/app)
+    message(STATUS "APP_PORT_DIR = ${APP_PORT_DIR}")
 endif()
 
 # Turn off mbedtls test mode 
 set(ENABLE_PROGRAMS OFF CACHE BOOL "Build mbedtls programs")
 set(ENABLE_TESTING OFF CACHE BOOL "Build mbedtls testing")
-add_definitions(-DMBEDTLS_CONFIG_FILE="${PORT_DIR}/mbedtls/inc/SSLConfig.h")
+add_definitions(-DMBEDTLS_CONFIG_FILE="${APP_PORT_DIR}/mbedtls/inc/SSLConfig.h")
 add_definitions(-DSET_TRUSTED_CERT_IN_SAMPLES)
+add_definitions(-DPICO_FLASH_SPI_CLKDIV=4)
 
 # Add libraries in subdirectories
 add_subdirectory(App)
 add_subdirectory(Boot)
 add_subdirectory(${MBEDTLS_DIR})
 add_subdirectory(${CMAKE_SOURCE_DIR}/libraries)
-add_subdirectory(${PORT_DIR})
+add_subdirectory(${BOOT_PORT_DIR})
+add_subdirectory(${APP_PORT_DIR})
 
 # Set compile options
 add_compile_options(

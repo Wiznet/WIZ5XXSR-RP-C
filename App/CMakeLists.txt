@@ -20,7 +20,7 @@ target_link_libraries(${TARGET_NAME} PRIVATE
         DHCP_FILES
         DNS_FILES
         TIMER_FILES
-        S2E_FILES
+        APP_S2E_FILES
         )
 set_target_properties(${TARGET_NAME} PROPERTIES COMPILE_FLAGS "-Wall")
 pico_enable_stdio_usb(${TARGET_NAME} 0)
@@ -49,7 +49,7 @@ target_link_libraries(${TARGET_NAME_LINKER} PRIVATE
         DHCP_FILES
         DNS_FILES
         TIMER_FILES
-        S2E_FILES
+        APP_S2E_FILES
         )
 set_target_properties(${TARGET_NAME_LINKER} PROPERTIES COMPILE_FLAGS "-Wall")
 pico_set_linker_script(${TARGET_NAME_LINKER} ${CMAKE_CURRENT_SOURCE_DIR}/${TARGET_NAME_LINKER}.ld)

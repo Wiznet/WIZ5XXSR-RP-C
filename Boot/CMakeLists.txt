@@ -15,12 +15,10 @@ target_link_libraries(${TARGET_NAME} PRIVATE
         hardware_spi
         ETHERNET_FILES
         IOLIBRARY_FILES
-        MQTT_FILES
-        MBEDTLS_FILES
         DHCP_FILES
         DNS_FILES
         TIMER_FILES
-        S2E_FILES
+        BOOT_S2E_FILES
 )
 
 function(target_cl_options option)
