@@ -28,6 +28,8 @@ extern uint8_t *g_rootca_buf;
 extern uint8_t *g_clica_buf;
 extern uint8_t *g_pkey_buf;
 
+uint8_t ssl_handshake_flag;
+
 int WIZnetRecvTimeOut(void *ctx, unsigned char *buf, size_t len, uint32_t timeout)
 {
     int ret;
@@ -303,6 +305,7 @@ int wiz_tls_connect_timeout(wiz_tls_context* tlsContext, char * addr, unsigned i
 
     PRT_SSL(" Performing the SSL/TLS handshake...\r\n");
 
+    ssl_handshake_flag = 1;
     while( ( ret = mbedtls_ssl_handshake( tlsContext->ssl ) ) != 0 )
     {
         if( ret != MBEDTLS_ERR_SSL_WANT_READ && ret != MBEDTLS_ERR_SSL_WANT_WRITE )
@@ -313,6 +316,7 @@ int wiz_tls_connect_timeout(wiz_tls_context* tlsContext, char * addr, unsigned i
             return( -1 );
         }
     }
+    ssl_handshake_flag = 0;
 
     if (ssl_option->root_ca_option == MBEDTLS_SSL_VERIFY_REQUIRED)
     {

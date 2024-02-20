@@ -27,6 +27,8 @@ static volatile time_t devtime_msec = 0;
 extern uint8_t factory_flag;
 static uint32_t factory_time;
 
+extern uint8_t ssl_handshake_flag;
+
 extern uint8_t flag_s2e_application_running;
 struct repeating_timer timer;
 
@@ -63,8 +65,11 @@ bool repeating_timer_callback(struct repeating_timer *t)
         devtime_sec++;              // device time counter,
         currenttime_sec++;          // Can be updated this counter value by time protocol like NTP.
         LED_Toggle(LED3);
-#ifdef __USE_WATCHDOG__
+
+#ifdef __USE_S2E_OVER_TLS__
+    if(ssl_handshake_flag) {
         watchdog_update();
+    }
 #endif
     }
 
