@@ -9,11 +9,7 @@
 /* Application Firmware Version */
 #define MAJOR_VER               1
 #define MINOR_VER               0
-#define MAINTENANCE_VER         6
-
-#define BOOT_MAJOR_VER               1
-#define BOOT_MINOR_VER               0
-#define BOOT_MAINTENANCE_VER         6
+#define MAINTENANCE_VER         7
 
 #define DEV_CONFIG_VER          103
 

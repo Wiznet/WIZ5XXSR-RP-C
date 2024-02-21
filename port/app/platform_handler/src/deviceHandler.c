@@ -119,6 +119,10 @@ uint8_t device_bank_update(void)
     
     do
     {
+
+#ifdef __USE_WATCHDOG__
+        watchdog_update();
+#endif
         recv_len = get_firmware_from_network(SOCK_FWUPDATE, g_recv_buf);
         if(recv_len > 0)
         {
