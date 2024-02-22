@@ -39,6 +39,8 @@ For detailed information about each product using WIZ5XXSR-RP-C, refer to the li
 
 - [**WIZ510SR-RP**][link-wiz510sr-rp]
 
+<p align="center"><img src="https://github.com/Wiznet/W5XXSR-RP-C/blob/main/static/images/getting_started/wiz510sr-rp_main.png"></p>
+
 
 
 <!--
@@ -48,8 +50,9 @@ Link
 [link-getting_started_with_raspberry_pi_pico]: https://datasheets.raspberrypi.org/pico/getting-started-with-pico.pdf
 [link-rp2040]: https://www.raspberrypi.org/products/rp2040/
 [link-w5100s]: https://docs.wiznet.io/Product/iEthernet/W5100S/overview
-[link-wiz500sr-rp]: https://docs.wiznet.io/Product/S2E-Module/WIZ500SR-RP/datasheet
-[link-wiz505sr-rp]: https://docs.wiznet.io/Product/S2E-Module/WIZ505SR-RP/datasheet
-[link-wiz510sr-rp]: https://docs.wiznet.io/Product/S2E-Module/WIZ510SR-RP/datasheet
-[link-wiz500sr-rp_main]: https://github.com/Wiznet/W5XXSR-RP-C/blob/main/static/images/getting_started/w5500-evb-pico_main.png
-[link-wiz505sr-rp_main]: https://github.com/Wiznet/W5XXSR-RP-C/blob/main/static/images/getting_started/w5500-evb-pico_main.png
+[link-wiz500sr-rp]: https://docs.wiznet.io/Product/S2E-Module/WIZ5xxSR-RP-Series/WIZ500SR-RP/overview
+[link-wiz505sr-rp]: https://docs.wiznet.io/Product/S2E-Module/WIZ5xxSR-RP-Series/WIZ505SR-RP/overview
+[link-wiz510sr-rp]: https://docs.wiznet.io/Product/S2E-Module/WIZ5xxSR-RP-Series/WIZ510SR-RP/overview
+[link-wiz500sr-rp_main]: https://github.com/Wiznet/W5XXSR-RP-C/blob/main/static/images/getting_started/wiz500sr-rp_main.png
+[link-wiz505sr-rp_main]: https://github.com/Wiznet/W5XXSR-RP-C/blob/main/static/images/getting_started/wiz505sr-rp_main.png
+[link-wiz510sr-rp_main]: https://github.com/Wiznet/W5XXSR-RP-C/blob/main/static/images/getting_started/wiz510sr-rp_main.png
