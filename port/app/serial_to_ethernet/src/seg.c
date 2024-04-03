@@ -15,6 +15,12 @@
 #include "SSLInterface.h"
 #include "mqttsHandler.h"
 
+//Modbus supprot
+#include "mb.h"
+#include "mbrtu.h"
+#include "mbascii.h"
+#include "mbserial.h"
+
 wiz_tls_context s2e_tlsContext;
 static int wiz_tls_init_state;
 #endif
@@ -98,6 +104,10 @@ uint8_t isSocketOpen_TCPclient = OFF;
 Network mqtt_n;
 MQTTClient mqtt_c = DefaultClient;
 MQTTPacket_connectData mqtt_data = MQTTPacket_connectData_initializer;
+
+/*the flag of modbus*/
+extern volatile uint8_t mb_state_rtu_finish;
+extern volatile uint8_t mb_state_ascii_finish;
 
 /* Private functions prototypes ----------------------------------------------*/
 void proc_SEG_tcp_client(uint8_t sock);
@@ -280,6 +290,30 @@ void proc_SEG_udp(uint8_t sock)
                 {
                     ether_to_uart(sock);
                 }
+            }
+            else if(serial_mode == SEG_SERIAL_MODBUS_RTU)
+            {
+                RTU_Uart_RX();
+
+				if(mb_state_rtu_finish == TRUE) {
+					mb_state_rtu_finish = FALSE;
+					mbRTUtoTCP(sock);
+				}
+				if(getSn_RX_RSR(sock)) {
+					mbTCPtoRTU(sock);
+				}
+            }
+            else if(serial_mode == SEG_SERIAL_MODBUS_ASCII)
+            {
+                ASCII_Uart_RX();
+
+				if(mb_state_ascii_finish == TRUE) {
+					mb_state_ascii_finish = FALSE;
+					mbASCIItoTCP(sock);
+				}
+				if(getSn_RX_RSR(sock)) {
+					mbTCPtoASCII(sock);
+				}
             }
             break;
             
@@ -1316,6 +1350,30 @@ void proc_SEG_tcp_server(uint8_t sock)
                 {
                     ether_to_uart(sock);
                 }
+            }
+            else if(serial_mode == SEG_SERIAL_MODBUS_RTU)
+            {
+                RTU_Uart_RX();
+
+				if(mb_state_rtu_finish==TRUE) {
+					mb_state_rtu_finish = FALSE;
+					mbRTUtoTCP(sock);
+				}
+				if(getSn_RX_RSR(sock)) {
+					mbTCPtoRTU(sock);
+				}
+            }
+            else if(serial_mode == SEG_SERIAL_MODBUS_ASCII)
+            {
+                ASCII_Uart_RX();
+
+				if(mb_state_ascii_finish == TRUE) {
+					mb_state_ascii_finish = FALSE;
+					mbASCIItoTCP(sock);
+				}
+				if(getSn_RX_RSR(sock)) {
+					mbTCPtoASCII(sock);
+				}
             }
 
             // Check the inactivity timer

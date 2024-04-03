@@ -1,3 +1,31 @@
+# ioLibrary_Driver
+add_library(BOOT_IOLIBRARY_FILES STATIC)
+
+target_sources(BOOT_IOLIBRARY_FILES PUBLIC
+        ${BOOT_PORT_DIR}/ioLibrary_Driver/src/w5x00_spi.c
+        ${BOOT_PORT_DIR}/ioLibrary_Driver/src/w5x00_gpio_irq.c
+        )
+
+target_include_directories(BOOT_IOLIBRARY_FILES PUBLIC
+        ${WIZNET_DIR}/Ethernet
+        ${BOOT_PORT_DIR}/ioLibrary_Driver/inc
+        ${BOOT_PORT_DIR}
+        )
+
+target_link_libraries(BOOT_IOLIBRARY_FILES PRIVATE
+        cmsis_core
+        pico_stdlib
+        hardware_adc
+        hardware_flash
+        hardware_resets
+        hardware_spi
+        hardware_dma
+        hardware_clocks
+        DHCP_FILES
+        ETHERNET_FILES
+        DNS_FILES
+        )
+
 # configuration        
 add_library(BOOT_S2E_FILES STATIC)
 
@@ -37,7 +65,7 @@ target_link_libraries(BOOT_S2E_FILES PRIVATE
         hardware_spi
         DHCP_FILES
         ETHERNET_FILES
-        IOLIBRARY_FILES
+        BOOT_IOLIBRARY_FILES
         mbedcrypto
         mbedx509
         )

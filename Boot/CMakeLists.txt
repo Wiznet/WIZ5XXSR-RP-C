@@ -14,7 +14,7 @@ target_link_libraries(${TARGET_NAME} PRIVATE
         hardware_structs
         hardware_spi
         ETHERNET_FILES
-        IOLIBRARY_FILES
+        BOOT_IOLIBRARY_FILES
         DHCP_FILES
         DNS_FILES
         TIMER_FILES

@@ -57,13 +57,13 @@ uint8_t * tbSEGCPCMD[] = {"MC", "VR", "MN", "IM", "OP", "DD", "CP", "PO", "DG", 
 #else
 
 uint8_t * tbSEGCPCMD[] = {"MC", "VR", "MN", "IM", "OP", "CP", "DG", "KA", "KI", "KE",
-                          "RI", "LI", "SM", "GW", "DS", "DH", "LP", "RP", "RH", "BR", 
-                          "DB", "PR", "SB", "FL", "IT", "PT", "PS", "PD", "TE", "SS", 
-                          "NP", "SP", "MA", "PW", "SV", "EX", "RT", "UN", "ST", "FR", 
-                          "EC", "GA", "GB", "GC", "GD", "CA", "CB", "CC", "CD", "SC", 
-                          "S0", "S1", "RX", "UI", "TR", "QU", "QP", "QC", "QK", "PU", 
-                          "U0", "U1", "U2", "QO", "RC", "CE", "OC", "LC", "PK", "UF",
-                          "FW", "SO", 0};
+                          "RI", "LI", "SM", "GW", "DS", "DH", "LP", "RP", "RH", "BR",
+                          "DB", "PR", "SB", "FL", "PO", "IT", "PT", "PS", "PD", "TE",
+                          "SS", "NP", "SP", "MA", "PW", "SV", "EX", "RT", "UN", "ST",
+                          "FR", "EC", "GA", "GB", "GC", "GD", "CA", "CB", "CC", "CD",
+                          "SC", "S0", "S1", "RX", "UI", "TR", "QU", "QP", "QC", "QK",
+                          "PU", "U0", "U1", "U2", "QO", "RC", "CE", "OC", "LC", "PK",
+                          "UF", "FW", "SO", 0};
  
 #endif
 uint8_t * tbSEGCPERR[] = {"ERNULL", "ERNOTAVAIL", "ERNOPARAM", "ERIGNORED", "ERNOCOMMAND", "ERINVALIDPARAM", "ERNOPRIVILEGE"};
@@ -427,6 +427,8 @@ uint16_t proc_SEGCP(uint8_t* segcp_req, uint8_t* segcp_rep)
                         break;
                     case SEGCP_FL: sprintf(trep, "%d", dev_config->serial_option.flow_control);
                         break;
+                    case SEGCP_PO: sprintf(trep, "%d", dev_config->serial_option.protocol);
+                        break;
                     case SEGCP_IT: sprintf(trep, "%d", dev_config->tcp_option.inactivity);
                         break;
                     case SEGCP_PT: sprintf(trep, "%d", dev_config->serial_data_packing.packing_time);
@@ -789,6 +791,11 @@ uint16_t proc_SEGCP(uint8_t* segcp_req, uint8_t* segcp_rep)
                             else
                                 dev_config->serial_option.flow_control = tmp_byte;
                         }
+                        break;
+                    case SEGCP_PO:
+                        tmp_int = atoi(param);
+                        if(param_len > 2 || tmp_int > modbus_ascii) ret |= SEGCP_RET_ERR_INVALIDPARAM;
+                        else dev_config->serial_option.protocol = tmp_int;
                         break;
                     case SEGCP_IT:
                         tmp_long = atol(param);

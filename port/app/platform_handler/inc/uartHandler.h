@@ -91,6 +91,12 @@ enum flow_ctrl {
     flow_reverserts = 4 // Reverse RTS
 };
 
+enum protocol {
+    protocol_none = 0,
+    modbus_rtu = 1,
+    modbus_ascii = 2
+};
+
 extern uint8_t flag_ringbuf_full;
 
 extern uint32_t baud_table[];

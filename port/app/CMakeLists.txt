@@ -1,18 +1,18 @@
 # ioLibrary_Driver
-add_library(IOLIBRARY_FILES STATIC)
+add_library(APP_IOLIBRARY_FILES STATIC)
 
-target_sources(IOLIBRARY_FILES PUBLIC
+target_sources(APP_IOLIBRARY_FILES PUBLIC
         ${APP_PORT_DIR}/ioLibrary_Driver/src/w5x00_spi.c
         ${APP_PORT_DIR}/ioLibrary_Driver/src/w5x00_gpio_irq.c
         )
 
-target_include_directories(IOLIBRARY_FILES PUBLIC
+target_include_directories(APP_IOLIBRARY_FILES PUBLIC
         ${WIZNET_DIR}/Ethernet
         ${APP_PORT_DIR}/ioLibrary_Driver/inc
         ${APP_PORT_DIR}
         )
 
-target_link_libraries(IOLIBRARY_FILES PRIVATE
+target_link_libraries(APP_IOLIBRARY_FILES PRIVATE
         cmsis_core
         pico_stdlib
         hardware_adc
@@ -67,8 +67,47 @@ target_link_libraries(MBEDTLS_FILES PRIVATE
         DNS_FILES
         DHCP_FILES
         ETHERNET_FILES
-        IOLIBRARY_FILES
+        APP_IOLIBRARY_FILES
         APP_S2E_FILES
+        MQTT_FILES
+        MODBUS_FILES
+        mbedcrypto
+        mbedx509
+        mbedtls
+        )
+
+add_library(MODBUS_FILES STATIC)
+
+target_sources(MODBUS_FILES PUBLIC
+        ${APP_PORT_DIR}/modbus/src/mb.c
+        ${APP_PORT_DIR}/modbus/src/mbascii.c
+        ${APP_PORT_DIR}/modbus/src/mbcrc.c
+        ${APP_PORT_DIR}/modbus/src/mbrtu.c
+        ${APP_PORT_DIR}/modbus/src/mbtcp.c
+        ${APP_PORT_DIR}/modbus/src/mbtimer.c
+        ${APP_PORT_DIR}/modbus/src/mbserial.c
+        )
+        
+target_include_directories(MODBUS_FILES PUBLIC
+        ${APP_PORT_DIR}/modbus/inc
+        ${APP_PORT_DIR}
+        )
+
+target_link_libraries(MODBUS_FILES PRIVATE
+        cmsis_core
+        pico_stdlib
+        hardware_adc
+        hardware_clocks
+        hardware_dma
+        hardware_flash
+        hardware_resets
+        hardware_spi
+        DNS_FILES
+        DHCP_FILES
+        ETHERNET_FILES
+        APP_IOLIBRARY_FILES
+        APP_S2E_FILES
+        MBEDTLS_FILES
         MQTT_FILES
         mbedcrypto
         mbedx509
@@ -117,9 +156,10 @@ target_link_libraries(APP_S2E_FILES PRIVATE
         DNS_FILES
         DHCP_FILES
         ETHERNET_FILES
-        IOLIBRARY_FILES
+        APP_IOLIBRARY_FILES
         MBEDTLS_FILES
         MQTT_FILES
+        MODBUS_FILES
         mbedcrypto
         mbedx509
         mbedtls

@@ -45,6 +45,8 @@
 #include "storageHandler.h"
 #include "wizchip_conf.h"
 
+#include "mbrtu.h"
+
 /* Private typedef -----------------------------------------------------------*/
 
 /* Private define ------------------------------------------------------------*/
@@ -125,6 +127,11 @@ int main(void)
     if(serial_mode == SEG_SERIAL_PROTOCOL_NONE)
     {
         PRT_INFO(" > Serial to Ethernet Gateway Mode\r\n");
+    }
+    else
+    {   
+        PRT_INFO(" > Modbus Mode\r\n");
+        eMBRTUInit(dev_config->serial_option.baud_rate);
     }
 
     if(flag_hw_trig_enable)
