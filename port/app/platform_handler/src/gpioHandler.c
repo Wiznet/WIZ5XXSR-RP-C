@@ -49,11 +49,6 @@ void GPIO_Output_Reset(uint16_t GPIO_Pin)
     gpio_put(GPIO_Pin, IO_LOW);
 }
 
-uint8_t GPIO_Output_Read(uint16_t GPIO_Pin)
-{
-    return gpio_get(GPIO_Pin);
-}
-
 uint8_t GPIO_Output_Toggle(uint16_t GPIO_Pin)
 {
     uint8_t pin_state;
@@ -73,7 +68,15 @@ void Device_IO_Init(void)
 {
     struct __serial_option *serial_option = (struct __serial_option *)&(get_DevConfig_pointer()->serial_option);
     // Set the DTR pin to high when the DTR signal enabled (== PHY link status disabled)
-    if(serial_option->dtr_en == 1) set_flowcontrol_dtr_pin(ON);
+
+    if(serial_option->dtr_en == 1)
+    {
+        init_flowcontrol_dtr_pin();
+        set_flowcontrol_dtr_pin(ON);
+    }
+
+    if(serial_option->dsr_en == 1)
+        init_flowcontrol_dsr_pin();
 }
 
 // This function is intended only for output connection status pins; PHYlink, TCPconnection
@@ -125,7 +128,7 @@ void init_phylink_status_pin(void)
 }
 
 // DTR pin
-// output (shared pin with PHY link status)
+// output
 void init_flowcontrol_dtr_pin(void)
 {
     GPIO_Configuration(DTR_PIN, IO_OUTPUT, IO_NOPULL);
@@ -141,16 +144,15 @@ void set_flowcontrol_dtr_pin(uint8_t set)
 }
 
 // DSR pin
-// input, active high (shared pin with TCP connection status)
+// input, active high
 void init_flowcontrol_dsr_pin(void)
 {
     GPIO_Configuration(DSR_PIN, IO_INPUT, IO_NOPULL);
 }
 
-
 uint8_t get_flowcontrol_dsr_pin(void)
 {
-    return GPIO_Output_Read(DSR_PIN);
+    return GPIO_Input_Read(DSR_PIN);
 }
 
 void init_connection_status_io(void)
@@ -159,12 +161,6 @@ void init_connection_status_io(void)
 
     init_phylink_status_pin();
     init_tcpconnection_status_pin();
-
-    if(serial_option->dtr_en == 1)
-        init_flowcontrol_dtr_pin();
-
-    if(serial_option->dsr_en == 1)
-        init_flowcontrol_dsr_pin();
 }
 
 // Check the PHY link status
@@ -390,7 +386,7 @@ uint8_t get_user_io_val(uint16_t io_sel, uint16_t * val)
     }
     else // IO_DIGITAL == 0
     {
-      status = GPIO_Output_Read(USER_IO_PIN[idx]);
+      status = GPIO_Input_Read(USER_IO_PIN[idx]);
       *val = status;
     }
     ret = 1; // I/O Read success

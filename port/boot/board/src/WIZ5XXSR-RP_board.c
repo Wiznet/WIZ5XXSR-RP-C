@@ -41,7 +41,8 @@ void RP2040_Board_Init(void)
     // UART interface selector pin initialize
     init_uart_if_sel_pin(); // UART interface selector: RS-232 / RS-422 / RS-485
 #endif
-
+    init_connection_status_io();
+    
     /* GPIOs Initialize */
     Device_IO_Init();
 

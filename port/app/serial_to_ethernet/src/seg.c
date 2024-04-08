@@ -2059,7 +2059,7 @@ void ether_to_uart(uint8_t sock)
     {
         if(serial_option->dsr_en == SEG_ENABLE) // DTR / DSR handshake (flow control)
         {
-            if(get_flowcontrol_dsr_pin() == IO_LOW) return;
+            if(get_flowcontrol_dsr_pin() == IO_HIGH) return;
         }
 //////////////////////////////////////////////////////////////////////
 #ifdef __USE_UART_485_422__

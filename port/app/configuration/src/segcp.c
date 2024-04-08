@@ -868,7 +868,7 @@ uint16_t proc_SEGCP(uint8_t* segcp_req, uint8_t* segcp_rep)
                             dev_config->serial_option.dtr_en = (uint8_t)tmp_int;
                             dev_config->serial_option.dsr_en = tmp_byte;
                             
-                            // Set the DTR pin to high when the DTR signal enabled (== PHY link status disabled)
+                            // Set the DTR pin to high when the DTR signal enabled
                             if(dev_config->serial_option.dtr_en == SEGCP_ENABLE) set_flowcontrol_dtr_pin(ON);
                         }
                         break;

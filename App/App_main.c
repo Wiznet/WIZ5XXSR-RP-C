@@ -79,7 +79,7 @@ int main(void)
     set_W5X00_NetTimeout();
     DATA0_UART_Interrupt_Enable();
     Timer_Configuration();
-    init_connection_status_io();
+    
     sleep_ms(100);
     
     flag_hw_trig_enable = !get_hw_trig_pin();
