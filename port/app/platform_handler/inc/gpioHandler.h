@@ -89,7 +89,6 @@ void gpio_handler_timer_msec(void); // This function have to call every 1 millis
 void GPIO_Configuration(uint16_t GPIO_Pin, USER_IO_Direction GPIO_Mode, USER_IO_PULL GPIO_Pull);
 void GPIO_Output_Set(uint16_t GPIO_Pin);
 void GPIO_Output_Reset(uint16_t GPIO_Pin);
-uint8_t GPIO_Output_Read(uint16_t GPIO_Pin);
 uint8_t GPIO_Output_Toggle(uint16_t GPIO_Pin);
 uint8_t GPIO_Input_Read(uint16_t GPIO_Pin);
 

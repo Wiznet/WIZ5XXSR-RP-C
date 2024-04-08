@@ -77,7 +77,7 @@ int main(void)
         RP2040_W5X00_Init();
         set_W5X00_NetTimeout();
         Timer_Configuration();
-        init_connection_status_io();
+
         sleep_ms(100);
 
         while (check_phylink_status() == PHY_LINK_OFF)
