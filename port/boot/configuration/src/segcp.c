@@ -56,13 +56,12 @@ uint8_t * tbSEGCPCMD[] = {"MC", "VR", "MN", "IM", "OP", "DD", "CP", "PO", "DG", 
 #else
 
 uint8_t * tbSEGCPCMD[] = {"MC", "VR", "MN", "IM", "OP", "CP", "DG", "KA", "KI", "KE",
-                          "RI", "LI", "SM", "GW", "DS", "DH", "LP", "RP", "RH", "BR", 
-                          "DB", "PR", "SB", "FL", "IT", "PT", "PS", "PD", "TE", "SS", 
-                          "NP", "SP", "MA", "PW", "SV", "EX", "RT", "UN", "ST", "FR", 
-                          "EC", "GA", "GB", "GC", "GD", "CA", "CB", "CC", "CD", "SC", 
-                          "S0", "S1", "RX", "UI", "TR", "QU", "QP", "QC", "QK", "PU", 
-                          "U0", "U1", "U2", "QO", "RC", "CE", "OC", "LC", "PK", "UF",
-                          "FW", "SO", 0};
+                          "RI", "LI", "SM", "GW", "DS", "DH", "LP", "RP", "RH", "BR",
+                          "DB", "PR", "SB", "FL", "IT", "PT", "PS", "PD", "TE", "SS",
+                          "NP", "SP", "MA", "PW", "SV", "EX", "RT", "UN", "ST", "FR",
+                          "EC", "GA", "GB", "GC", "GD", "CA", "CB", "CC", "CD", "RX",
+                          "UI", "TR", "QU", "QP", "QC", "QK", "PU", "U0", "U1", "U2",
+                          "QO", "RC", "CE", "OC", "LC", "PK", "UF", "FW", "SO", 0};
  
 #endif
 uint8_t * tbSEGCPERR[] = {"ERNULL", "ERNOTAVAIL", "ERNOPARAM", "ERIGNORED", "ERNOCOMMAND", "ERINVALIDPARAM", "ERNOPRIVILEGE"};
@@ -81,14 +80,6 @@ void do_segcp(void)
     DevConfig *dev_config = get_DevConfig_pointer();
     uint16_t segcp_ret = 0;
 
-    // Process the serial AT command mode
-    if(opmode == DEVICE_AT_MODE)
-    {
-        segcp_ret = proc_SEGCP_uart(gSEGCPREQ, gSEGCPREP);
-        if(segcp_ret & SEGCP_RET_ERR)
-            if(dev_config->serial_common.serial_debug_en) PRT_ERR(" > SEGCP:ERROR:%04X\r\n", segcp_ret);
-    }
-    
     segcp_ret |= proc_SEGCP_udp(gSEGCPREQ, gSEGCPREP);
     segcp_ret |= proc_SEGCP_tcp(gSEGCPREQ, gSEGCPREP);
 
@@ -467,16 +458,6 @@ uint16_t proc_SEGCP(uint8_t* segcp_req, uint8_t* segcp_rep)
                         break;
 #endif
 
-                    // GET Status pin's setting and status
-                    case SEGCP_SC: // mode select
-                        sprintf(trep, "%d%d", dev_config->serial_option.dtr_en, dev_config->serial_option.dsr_en);
-                        break;
-                    case SEGCP_S0:
-                        sprintf(trep, "%d", get_connection_status_io(STATUS_PHYLINK_PIN)); // STATUS_PHYLINK_PIN (in) == DTR_PIN (out)
-                        break;
-                    case SEGCP_S1:
-                        sprintf(trep, "%d", get_connection_status_io(STATUS_TCPCONNECT_PIN)); // STATUS_TCPCONNECT_PIN (in) == DSR_PIN (in)
-                        break;
                     case SEGCP_RX:
                         uart_rx_flush();
                         sprintf(trep, "%s", "FLUSH");
@@ -522,7 +503,7 @@ uint16_t proc_SEGCP(uint8_t* segcp_req, uint8_t* segcp_rep)
                     case SEGCP_TR:
                         sprintf(trep, "%d", dev_config->network_option.tcp_rcr_val);
                         break;
-                                        case SEGCP_UF: // fw bank copy flag
+                    case SEGCP_UF: // fw bank copy flag
                         sprintf(trep, "%d", dev_config->firmware_update.fwup_copy_flag);
                         break;
                         
@@ -784,29 +765,6 @@ uint16_t proc_SEGCP(uint8_t* segcp_req, uint8_t* segcp_rep)
                         }
                         break;
 
-                    // SET status pin mode selector
-                    case SEGCP_SC:
-                        str_to_hex(param, &tmp_byte);
-                        
-                        tmp_int = (tmp_byte & 0xF0) >> 4;   // [0] PHY link / [1] DTR
-                        tmp_byte = (tmp_byte & 0x0F);       // [0] TCP connection / [1] DSR
-                        
-                        if((param_len > 2) || (tmp_byte > IO_HIGH) || (tmp_int > IO_HIGH)) // Invalid parameters
-                            ret |= SEGCP_RET_ERR_INVALIDPARAM;
-                        else
-                        {
-                            dev_config->serial_option.dtr_en = (uint8_t)tmp_int;
-                            dev_config->serial_option.dsr_en = tmp_byte;
-                            
-                            // Set the DTR pin to high when the DTR signal enabled (== PHY link status disabled)
-                            if(dev_config->serial_option.dtr_en == SEGCP_ENABLE) set_flowcontrol_dtr_pin(ON);
-                        }
-                        break;
-                    case SEGCP_S0:
-                    case SEGCP_S1:
-                        ret |= SEGCP_RET_ERR_INVALIDPARAM;
-                        break;
-
                     case SEGCP_RX:
                         ret |= SEGCP_RET_ERR_INVALIDPARAM;
                         break;
@@ -884,10 +842,6 @@ uint16_t proc_SEGCP(uint8_t* segcp_req, uint8_t* segcp_rep)
                         }
                         break;
 #endif
-
-
-
-
                     case SEGCP_UN:
                     case SEGCP_ST:
                     case SEGCP_MA:
