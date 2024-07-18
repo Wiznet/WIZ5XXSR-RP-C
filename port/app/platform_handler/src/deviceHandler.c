@@ -543,7 +543,6 @@ int8_t process_dhcp(void)
     
     DHCP_init(SOCK_DHCP, g_send_buf);
     reg_dhcp_cbfunc(w5x00_dhcp_assign, w5x00_dhcp_assign, w5x00_dhcp_conflict);
-    set_device_status_all(ST_UPGRADE);
     while(1)
     {
         ret = DHCP_run();
