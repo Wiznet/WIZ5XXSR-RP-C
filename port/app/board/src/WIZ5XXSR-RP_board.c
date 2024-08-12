@@ -93,7 +93,8 @@ uint8_t get_uart_if_sel_pin(void)
   #ifdef __USE_UART_IF_SELECTOR__
     return GPIO_ReadInputDataBit(UART_IF_SEL_PORT, UART_IF_SEL_PIN);
   #else
-    return UART_IF_DEFAULT;
+    //return UART_IF_DEFAULT;
+    return UART_IF_RS485;
   #endif
 }
 
