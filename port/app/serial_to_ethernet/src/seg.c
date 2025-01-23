@@ -736,18 +736,13 @@ void proc_SEG_tcp_client_over_tls(uint8_t sock)
         case SOCK_FIN_WAIT:
         case SOCK_CLOSED:
             close(sock);
-            if(get_wiz_tls_init_state() != ENABLE)
-            {
-                host = (const char *)network_connection->dns_domain_name;
-                PRT_SEG("host = %s\r\n", host);
-            }
-            else
+            if(get_wiz_tls_init_state() == DISABLE)
             {
                 wiz_tls_deinit(&s2e_tlsContext);
                 set_wiz_tls_init_state(DISABLE);
             }
 
-            if(wiz_tls_init(&s2e_tlsContext, sock, host) > 0)
+            if(wiz_tls_init(&s2e_tlsContext, sock) > 0)
             {
                 set_device_status(ST_OPEN);
                 reset_SEG_timeflags();
@@ -1055,10 +1050,7 @@ void proc_SEG_mqtts_client(uint8_t sock)
                 if(check_tcp_connect_exception() == ON) return;
                 if (network_connection->working_mode == MQTTS_CLIENT_MODE)
                 {
-                    if (ssl_option->root_ca_option == MBEDTLS_SSL_VERIFY_NONE)
-                        ret = NewNetwork_mqtt_tls(&mqtt_n, sock, network_connection->remote_ip);
-                    else
-                        ret = NewNetwork_mqtt_tls(&mqtt_n, sock, network_connection->dns_domain_name);
+                    ret = NewNetwork_mqtt_tls(&mqtt_n, sock);
 
                     if (ret < 0)
                     {

@@ -44,7 +44,7 @@
 #define __MQTTSHANDLER_H_
 
 // TLS support
-int NewNetwork_mqtt_tls(Network* n, int sn, const char * host);
+int NewNetwork_mqtt_tls(Network* n, int sn);
 int mqtt_tls_connect(uint8_t *remote_ip, uint16_t remote_port, uint32_t timeout);
 int mqtt_tls_read(Network*, unsigned char*, unsigned int, int);
 int mqtt_tls_write(Network*, unsigned char*, unsigned int, int);

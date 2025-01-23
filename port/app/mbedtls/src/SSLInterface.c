@@ -84,7 +84,7 @@ void WIZnetDebugCB(void *ctx, int level, const char *file, int line, const char 
 
 /* SSL context initialization
  * */
-int wiz_tls_init(wiz_tls_context* tlsContext, int* socket_fd, const char * host)
+int wiz_tls_init(wiz_tls_context* tlsContext, int* socket_fd)
 {
     struct __ssl_option *ssl_option = (struct __ssl_option *)&(get_DevConfig_pointer()->ssl_option);
     int ret = 1;
@@ -151,6 +151,23 @@ int wiz_tls_init(wiz_tls_context* tlsContext, int* socket_fd, const char * host)
           return -1;
         }
         PRT_SSL("ok! mbedtls_x509_crt_parse returned -0x%x while parsing root cert\r\n", -ret);
+
+        uint8_t ip_temp[4];
+        struct __network_connection *network_connection = (struct __network_connection *)&(get_DevConfig_pointer()->network_connection);
+        if (!is_ipaddr(network_connection->dns_domain_name, ip_temp)) {
+            if((ret = mbedtls_ssl_set_hostname(tlsContext->ssl, network_connection->dns_domain_name)) != 0)
+            {
+                PRT_SSL(" failed mbedtls_ssl_set_hostname returned %d\r\n", ret);
+                return -1;
+            }
+        } else {
+            if((ret = mbedtls_ssl_set_hostname(tlsContext->ssl, NULL)) != 0)
+            {
+                PRT_SSL(" failed mbedtls_ssl_set_hostname returned %d\r\n", ret);
+                return -1;
+            }
+        }
+        PRT_SSL("ok! mbedtls_ssl_set_hostname returned %d\r\n", ret);
     }
 
     if (ssl_option->client_cert_enable == ENABLE)
@@ -173,14 +190,6 @@ int wiz_tls_init(wiz_tls_context* tlsContext, int* socket_fd, const char * host)
         PRT_SSL("ok! mbedtls_pk_parse_key returned -0x%x while parsing private key\r\n", -ret);
     }
 
-    PRT_SSL("host = %s\r\n", host);
-    if((ret = mbedtls_ssl_set_hostname(tlsContext->ssl, host)) != 0)
-    {
-        PRT_SSL(" failed mbedtls_ssl_set_hostname returned %d\r\n", ret);
-        return -1;
-    }
-    PRT_SSL("ok! mbedtls_ssl_set_hostname returned %d\r\n", ret);
-    
     if((ret = mbedtls_ssl_config_defaults(tlsContext->conf,
                         MBEDTLS_SSL_IS_CLIENT,
                         MBEDTLS_SSL_TRANSPORT_STREAM,
@@ -207,6 +216,8 @@ int wiz_tls_init(wiz_tls_context* tlsContext, int* socket_fd, const char * host)
     }
     
     mbedtls_ssl_conf_endpoint(tlsContext->conf, MBEDTLS_SSL_IS_CLIENT);
+    if (ssl_option->recv_timeout == 0)
+        ssl_option->recv_timeout = 2000;
     mbedtls_ssl_conf_read_timeout(tlsContext->conf, ssl_option->recv_timeout);
 
     if((ret = mbedtls_ssl_setup(tlsContext->ssl, tlsContext->conf)) != 0)
