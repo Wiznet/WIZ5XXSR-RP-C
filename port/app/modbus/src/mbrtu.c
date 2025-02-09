@@ -19,30 +19,27 @@ extern uint8_t plus_count;
 
 void eMBRTUInit( uint32_t ulBaudRate )
 {
-	uint32_t usTimerT35_50us;
-
-	/* Modbus RTU uses 8 Databits. */
-
-  /* If baudrate > 19200 then we should use the fixed timer values
-   * t35 = 1750us. Otherwise t35 must be 3.5 times the character time.
-   */
- if( baud_table[ulBaudRate] > 19200 )
-  {
-      usTimerT35_50us = 35;
-  }
-  else
-  {
-      /* The timer reload value for a character is given by:
-       *
-       * ChTimeValue = Ticks_per_1s / ( Baudrate / 11 )
-       *             = 11 * Ticks_per_1s / Baudrate
-       *             = 220000 / Baudrate
-       * The reload for t3.5 is 1.5 times this value and similary
-       * for t3.5.
-       */
-      usTimerT35_50us = ( 7UL * 220000UL ) / ( 2UL * baud_table[ulBaudRate] );
-  }
-  xMBPortTimersInit(usTimerT35_50us);
+    uint32_t usTimerT35_50us;
+ 
+    /* Modbus RTU uses 8 Databits. */
+ 
+    /* If baudrate > 19200 then we should use the fixed timer values
+     * t35 = 1750us. Otherwise t35 must be 3.5 times the character time.
+     */
+    if (baud_table[ulBaudRate] > 19200)
+    {
+        usTimerT35_50us = 1750 / 50;  // 1750us를 50µs 단위로 변환
+    }
+    else
+    {
+        /* The timer reload value for a character is given by:
+         * ChTimeValue = 11 * 1000000 / Baudrate  (us 단위)
+         * T3.5 = 3.5 * ChTimeValue
+         * usTimerT35_50us = T3.5 / 50 (50us 단위로 변환)
+         */
+        usTimerT35_50us = (uint32_t)((3.5 * 11 * 1000000UL) / (50UL * baud_table[ulBaudRate]) + 1);
+    }
+    xMBPortTimersInit(usTimerT35_50us);
 }
 
 static bool mbRTUPackage( uint8_t * pucRcvAddress, uint8_t ** pucFrame, uint16_t * pusLength )

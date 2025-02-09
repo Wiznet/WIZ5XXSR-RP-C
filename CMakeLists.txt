@@ -66,6 +66,18 @@ add_definitions(-DMBEDTLS_CONFIG_FILE="${APP_PORT_DIR}/mbedtls/inc/SSLConfig.h")
 add_definitions(-DSET_TRUSTED_CERT_IN_SAMPLES)
 add_definitions(-DPICO_FLASH_SPI_CLKDIV=4)
 
+# Set compile options
+add_compile_options(
+        -Wall
+        -Wno-format          # int != int32_t as far as the compiler is concerned because gcc has int32_t as long int
+        -Wno-unused-function # we have some for the docs that aren't called
+        -Wno-maybe-uninitialized
+        -Wno-error=array-parameter
+        -Wno-error=incompatible-pointer-types
+        -Wno-implicit-function-declaration
+        -Wno-int-conversion
+        )
+
 # Add libraries in subdirectories
 add_subdirectory(App)
 add_subdirectory(Boot)
@@ -74,10 +86,3 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/libraries)
 add_subdirectory(${BOOT_PORT_DIR})
 add_subdirectory(${APP_PORT_DIR})
 
-# Set compile options
-add_compile_options(
-        -Wall
-        -Wno-format          # int != int32_t as far as the compiler is concerned because gcc has int32_t as long int
-        -Wno-unused-function # we have some for the docs that aren't called
-        -Wno-maybe-uninitialized
-        )
